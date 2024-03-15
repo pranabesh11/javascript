@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dropdown</title>
+    <style>
+      .dropdown {
+        position: relative;
+        width: 200px;
+        border: 1px solid red;
+      }
+
+      .dropdown-field {
+        padding: 10px;
+        background-color: #f0f0f0;
+        cursor: pointer;
+        font-size: large;
+        
+      }
+
+      .dropdown-list {
+        position: absolute;
+        width: 100%;
+        background-color: #fff;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        z-index: 100;
+        
+      }
+
+      .search-box {
+        width: calc(100% - 40px);
+        padding: 10px;
+        margin: 10px;
+        border: 1px solid #ddd;
+        background-color: rgb(168, 223, 168);
+        border-radius: 10px;
+      }
+
+      .dropdown-item {
+        padding: 10px;
+        cursor: pointer;
+        border-bottom: 1px solid #eee;
+        
+      }
+
+      .dropdown-item:hover {
+        background-color: #f6f6f6;
+      }
+      #select-all-btn{
+        padding: 10px;
+        cursor: pointer;
+        width: 200px;
+        border-bottom: 1px solid #eee;
+        background-color: aquamarine;
+        border-style: none;
+      }
+    </style>
+</head>
+<body>  
+    <div class="dropdown">
+        <div id="dropdown-field" class="dropdown-field">Select a name</div>
+        <div id="dropdown-list" class="dropdown-list" style="display:none;">
+          <input type="text" id="search-box" placeholder="Search..." class="search-box" />
+          <div class="dropdown-item">
+            <input type="checkbox" id="item1" name="items[]" value="Item 1">
+            <label for="item1">Item 1</label>
+          </div>
+          <div class="dropdown-item">
+            <input type="checkbox" id="item2" name="items[]" value="Item 2">
+            <label for="item2">Item 2</label>
+          </div>
+          <div class="dropdown-item">
+            <input type="checkbox" id="item3" name="items[]" value="Item 3">
+            <label for="item3">Item 3</label>
+          </div>
+          <!-- Additional dropdown items here -->
+        <div class="dropdown-item">
+        <input type="checkbox" id="ferrari" name="cars[]" value="Ferrari">
+        <label for="ferrari">Ferrari</label>
+        </div>
+        <div class="dropdown-item">
+        <input type="checkbox" id="lamborghini" name="cars[]" value="Lamborghini">
+        <label for="lamborghini">Lamborghini</label>
+        </div>
+        <div class="dropdown-item">
+        <input type="checkbox" id="porsche" name="cars[]" value="Porsche">
+        <label for="porsche">Porsche</label>
+        </div>
+        <div class="dropdown-item">
+        <input type="checkbox" id="maserati" name="cars[]" value="Maserati">
+        <label for="maserati">Maserati</label>
+        </div>
+        <div class="dropdown-item">
+        <input type="checkbox" id="audi-r8" name="cars[]" value="Audi R8">
+        <label for="audi-r8">Audi R8</label>
+        </div>
+        <div class="dropdown-item">
+        <input type="checkbox" id="aston-martin" name="cars[]" value="Aston Martin">
+        <label for="aston-martin">Aston Martin</label>
+        </div>
+        <div class="dropdown-item">
+        <input type="checkbox" id="nissan-gtr" name="cars[]" value="Nissan GT-R">
+        <label for="nissan-gtr">Nissan GT-R</label>
+        </div>
+        <div class="dropdown-item">
+        <input type="checkbox" id="mclaren" name="cars[]" value="McLaren">
+        <label for="mclaren">McLaren</label>
+        </div>
+        <div class="dropdown-item">
+        <input type="checkbox" id="bugatti" name="cars[]" value="Bugatti">
+        <label for="bugatti">Bugatti</label>
+        </div>
+        <div class="dropdown-item">
+        <input type="checkbox" id="bmw-i8" name="cars[]" value="BMW i8">
+        <label for="bmw-i8">BMW i8</label>
+        </div>
+        <button id="select-all-btn">Select All</button>
+        </div>
+      </div>
+      
+      
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const dropdownField = document.getElementById('dropdown-field');
+          const dropdownList = document.getElementById('dropdown-list');
+          const searchBox = document.getElementById('search-box');
+          const selectAllBtn = document.getElementById('select-all-btn');
+        
+          // Toggle dropdown list
+          dropdownField.addEventListener('click', function() {
+            dropdownList.style.display = dropdownList.style.display === 'none' ? 'block' : 'none';
+            searchBox.value = ''; // Reset search box
+            filterItems(''); // Reset filter
+          });
+        
+          // Filter dropdown items
+          searchBox.addEventListener('keyup', function() {
+            filterItems(this.value);
+          });
+        
+          // Function to filter items based on search
+          function filterItems(query) {
+            const items = dropdownList.getElementsByClassName('dropdown-item');
+            for (let i = 0; i < items.length; i++) {
+              let item = items[i];
+              let text = item.textContent || item.innerText;
+              item.style.display = text.toLowerCase().indexOf(query.toLowerCase()) > -1 ? "" : "none";
+            }
+          }
+        
+          // Hide dropdown list when clicking outside
+          window.addEventListener('click', function(e) {
+            if (!e.target.matches('.dropdown, .dropdown *')) {
+              dropdownList.style.display = 'none';
+            }
+          });
+        
+          // Select item
+          dropdownList.addEventListener('change', function(e) {
+            if (e.target.type === 'checkbox') {
+              let selectedItems = Array.from(dropdownList.querySelectorAll('input[type="checkbox"]:checked'))
+                .map(checkbox => checkbox.value);
+              dropdownField.textContent = selectedItems.join(', ');
+            }
+          });
+        
+          // Select all items
+          selectAllBtn.addEventListener('click', function() {
+            const checkboxes = dropdownList.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => checkbox.checked = true);
+            let selectedItems = Array.from(checkboxes)
+              .map(checkbox => checkbox.value);
+            dropdownField.textContent = selectedItems.join(', ');
+            selectAllBtn.innerHTML = "dbl Click Deselect All"
+          });
+          // deselect all element from checklist
+          selectAllBtn.addEventListener('dblclick', function() {
+            const checkboxes = dropdownList.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => checkbox.checked = false);
+            dropdownField.textContent = 'Select a name';
+            selectAllBtn.innerHTML = "Select All"
+          });
+        });
+      </script>
+</body>
+</html>
